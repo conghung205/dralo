@@ -387,3 +387,19 @@ img {
         display: none;
     }
 }
+
+.modal-btn{
+    padding: 8px 20px;
+    color: #fff;
+    background-color: #34495e;
+    border: none;
+}
+.modal-btn.primary{
+    background: #3498db;
+}
+.modal-btn.danger{
+    background: #e74c3c;
+}
+.modal-btn.pull-left{
+    margin-right: auto;
+}

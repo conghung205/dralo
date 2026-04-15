@@ -15,6 +15,7 @@
         />
         <link rel="stylesheet" href="./assets/styles.css" media="all" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="./src/dralo.css" />
     </head>
     <body>
         <!-- HEADER -->
@@ -115,13 +116,13 @@
 
             <pre
                 class="html"
-            ><code>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/conghung205/dralo/dralo.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+            ><code>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/conghung205/dralo@v1.0.1/dralo.min.js&quot;&gt;&lt;/script&gt;</code></pre>
 
             <p>Optionally, include the Dralo CSS file for default styling:</p>
 
             <pre class="html"><code>&lt;link
     rel=&quot;stylesheet&quot;
-    href=&quot;https://cdn.jsdelivr.net/gh/conghung205/dralo/dralo.min.css&quot;
+    href=&quot;https://cdn.jsdelivr.net/gh/conghung205/dralo@v1.0.1/dralo.min.css&quot;
 &gt;</code></pre>
 
             <p>
@@ -417,16 +418,17 @@ modal.close();</code></pre>
             <h1>Template Modal 1</h1>
         </template>
 
+        <script src="./src/dralo.js"></script>
         <script src="./assets/highlight/highlight.js"></script>
         <script>
             // highlight code
             hljs.initHighlightingOnLoad();
 
             // Modal samples
-            const modal1Btn = document.querySelector(".js-dralo-modal-1");
 
+            // 1. Basic Modal
+            const modal1Btn = document.querySelector(".js-dralo-modal-1");
             const modal1 = new Dralo({
-                // enableScrollLock: false,
                 content: `<h1>Basic Modal</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
@@ -434,9 +436,135 @@ modal.close();</code></pre>
                     maiores, commodi veritatis ab vel exercitationem.</p>
                 `,
             });
-
             modal1Btn.onclick = () => {
                 modal1.open();
+            };
+
+            // 2. Modal with Buttons
+            const modal2Btn = document.querySelector(".js-dralo-modal-2");
+            const modal2 = new Dralo({
+                content: `<h1>Modal with Buttons</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                `,
+                footer: true,
+            });
+            modal2.addFooterButton("Cancel", "modal-btn", () => {
+                modal2.close();
+            });
+            modal2.addFooterButton("Confirm", "modal-btn primary", () => {
+                console.log("Something...");
+                modal2.close();
+            });
+            modal2Btn.onclick = () => {
+                modal2.open();
+            };
+
+            // 3. Large Content Modal
+            const modal3Btn = document.querySelector(".js-dralo-modal-3");
+            const modal3 = new Dralo({
+                content: `<h1>Large Content Modal</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                `,
+            });
+            modal3Btn.onclick = () => {
+                modal3.open();
+            };
+
+            // 4. Footer-Only Close Modal
+            const modal4Btn = document.querySelector(".js-dralo-modal-5");
+            const modal4 = new Dralo({
+                content: `<h1>Footer-Only Close Modal</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                `,
+                footer: true,
+                closeMethods: [],
+            });
+            modal4.addFooterButton("close", "modal-btn", () => {
+                modal4.close();
+            });
+            modal4Btn.onclick = () => {
+                modal4.open();
+            };
+
+            // 5. Persistent Modal (Stays in DOM)
+            const modal5Btn = document.querySelector(".js-dralo-modal-6");
+            const modal5 = new Dralo({
+                content: `<h1>Persistent Modal (Stays in DOM)</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                `,
+                destroyOnclose: false,
+            });
+            modal5Btn.onclick = () => {
+                modal5.open();
+            };
+
+            // 6. Multiple Modals
+            const modal6Btn = document.querySelector(".js-dralo-modal-7");
+            const modal6 = new Dralo({
+                content: `<h1>Multiple Modals</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                    <button class="btn" onclick="modal1.open()">Open Basic Modal</button>
+                `,
+                destroyOnclose: false,
+            });
+            modal6Btn.onclick = () => {
+                modal6.open();
+            };
+
+            // 7. YouTube Embed Modal
+            const modal7Btn = document.querySelector(".js-dralo-modal-4");
+            const modal7 = new Dralo({
+                content: `
+                    <h1>YouTube Embed Modal</h1>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/gZknpSi4CP8?si=yIWuK7nDDSifIeer" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    `,
+                destroyOnclose: false,
+            });
+            modal7Btn.onclick = () => {
+                modal7.open();
             };
         </script>
     </body>
