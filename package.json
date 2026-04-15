@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "minify": "terser dralo.js -o dralo.min.js && csso dralo.css -o dralo.min.css"
+  },
+  "dependencies": {
+    "csso-cli": "^4.0.2",
+    "terser": "^5.46.1"
+  }
+}
