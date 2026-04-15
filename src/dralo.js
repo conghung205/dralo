@@ -1,24 +1,40 @@
 Dralo.elements = [];
 
 function Dralo(options = {}) {
+    if (!options.content && !options.templateId) {
+        console.error("You must provide one of 'content' or 'templateId'.");
+        return;
+    }
+
+    if (options.content && options.templateId) {
+        options.templateId = null;
+        console.warn(
+            "Both 'content' and 'templateId' are specified. 'contnet' will take precedence, and 'templateId' will be ignored.",
+        );
+    }
+
+    if (options.templateId) {
+        this.template = document.querySelector(`#${options.templateId}`);
+
+        if (!this.template) {
+            console.error(`#${options.templateId} does not exits!`);
+            return;
+        }
+    }
+
     this.opt = Object.assign(
         {
+            enableScrollLock: true,
             closeMethods: ["button", "overlay", "escape"],
             footer: false,
             cssClass: [],
             destroyOnclose: true,
+            scrollLockTarget: () => document.body,
         },
         options,
     );
 
-    this.template = document.querySelector(`#${this.opt.templateId}`);
-
-    if (!this.template) {
-        console.error(`#${this.opt.templateId} does not exits!`);
-        return;
-    }
-
-    // kiểm tra closeMethods truyền gì nhiều
+    this.content = this.opt.content;
     const { closeMethods } = this.opt;
     this._allowButtonClose = closeMethods.includes("button");
     this._allowBackdropClose = closeMethods.includes("overlay");
@@ -30,11 +46,17 @@ function Dralo(options = {}) {
 
 Dralo.prototype._build = function () {
     // sao chép node
-    const content = this.template.content.cloneNode(true);
+    const contentNode = this.content
+        ? document.createElement("div")
+        : this.template.content.cloneNode(true);
+
+    if (this.content) {
+        contentNode.innerHTML = this.content;
+    }
 
     // create modal elements
     this._backdrop = document.createElement("div");
-    this._backdrop.className = "dralo__backdrop";
+    this._backdrop.className = "dralo";
 
     const container = document.createElement("div");
     container.className = "dralo__container";
@@ -55,12 +77,12 @@ Dralo.prototype._build = function () {
         container.append(button);
     }
 
-    const modalContent = document.createElement("div");
-    modalContent.className = "dralo__content";
+    this._modalContent = document.createElement("div");
+    this._modalContent.className = "dralo__content";
 
     // Append content and elements
-    modalContent.append(content);
-    container.append(modalContent);
+    this._modalContent.append(contentNode);
+    container.append(this._modalContent);
 
     // Nếu có footer: true
     if (this.opt.footer) {
@@ -76,8 +98,16 @@ Dralo.prototype._build = function () {
     document.body.append(this._backdrop);
 };
 
-Dralo.prototype.setFooterContent = function (html) {
-    this._footerContent = html;
+Dralo.prototype.setContent = function (content) {
+    this.content = content;
+
+    if (this._modalContent) {
+        this._modalContent.innerHTML = this.content;
+    }
+};
+
+Dralo.prototype.setFooterContent = function (content) {
+    this._footerContent = content;
     this._renderFooterContent();
 };
 
@@ -124,8 +154,18 @@ Dralo.prototype.open = function () {
     }, 0);
 
     // Disable scrolling
-    document.body.classList.add("dralo--no-scroll");
-    document.body.style.paddingRight = this._getScrollBarWidth() + "px";
+    if (this.opt.enableScrollLock) {
+        const target = this.opt.scrollLockTarget();
+
+        if (this._hasScrollbar(target)) {
+            target.classList.add("dralo--no-scroll");
+            const targetPadRight = parseInt(
+                getComputedStyle(target).paddingRight,
+            );
+            target.style.paddingRight =
+                targetPadRight + this._getScrollBarWidth() + "px";
+        }
+    }
 
     // attach event listeners
     if (this._allowBackdropClose) {
@@ -144,6 +184,17 @@ Dralo.prototype.open = function () {
     this._onTransitionEnd(this.opt.onOpen);
 
     return this._backdrop;
+};
+
+Dralo.prototype._hasScrollbar = (target) => {
+    if ([document.documentElement, document.body].includes(target)) {
+        return (
+            document.documentElement.scrollHeight >
+                document.documentElement.clientHeight ||
+            document.body.scrollHeight > document.body.clientHeight
+        );
+    }
+    return target.scrollHeight > target.clientHeight;
 };
 
 Dralo.prototype._handleEscapeKey = function (event) {
@@ -179,9 +230,13 @@ Dralo.prototype.close = function (destroy = this.opt.destroyOnclose) {
         }
 
         // Enable scrolling
-        if (!Dralo.elements.length) {
-            document.body.classList.remove("dralo--no-scroll");
-            document.body.style.paddingRight = "";
+        if (!Dralo.elements.length && this.opt.enableScrollLock) {
+            const target = this.opt.scrollLockTarget();
+
+            if (this._hasScrollbar(target)) {
+                target.classList.remove("dralo--no-scroll");
+                target.style.paddingRight = "";
+            }
         }
 
         if (typeof this.opt.onClose === "function") {

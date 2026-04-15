@@ -209,6 +209,14 @@ modal.close();</code></pre>
                     </td>
                 </tr>
                 <tr>
+                    <td>cssClass</td>
+                    <td>array</td>
+                    <td>
+                        Custom CSS classes applied to the modal container
+                        (default: <code>[]</code>)
+                    </td>
+                </tr>
+                <tr>
                     <td>footer</td>
                     <td>boolean</td>
                     <td>
@@ -230,6 +238,26 @@ modal.close();</code></pre>
                     <td>
                         Defines methods to close the modal (default:
                         <code>['overlay', 'button', 'escape']</code>)
+                    </td>
+                </tr>
+                <tr>
+                    <td>enableScrollLock</td>
+                    <td>boolean</td>
+                    <td>
+                        Enables or disables scroll locking when the modal is
+                        open. When set to
+                        <code>true</code>, it prevents scrolling on the target
+                        element specified by <code>scrollLockTarget</code>.
+                        Default: <code>true</code>.
+                    </td>
+                </tr>
+                <tr>
+                    <td>scrollLockTarget</td>
+                    <td>function</td>
+                    <td>
+                        A callback that returns the element to apply scroll
+                        locking on. By default, it locks scrolling on
+                        <code>document.body</code>.
                     </td>
                 </tr>
                 <tr>
@@ -385,10 +413,31 @@ modal.close();</code></pre>
             </footer>
         </div>
         <!-- /CONTAINER -->
+        <template id="modal-1">
+            <h1>Template Modal 1</h1>
+        </template>
 
         <script src="./assets/highlight/highlight.js"></script>
         <script>
+            // highlight code
             hljs.initHighlightingOnLoad();
+
+            // Modal samples
+            const modal1Btn = document.querySelector(".js-dralo-modal-1");
+
+            const modal1 = new Dralo({
+                // enableScrollLock: false,
+                content: `<h1>Basic Modal</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Tempore, nam? Ipsam quisquam, et, repellat recusandae odio a
+                    voluptatum voluptates beatae magni quaerat natus. In
+                    maiores, commodi veritatis ab vel exercitationem.</p>
+                `,
+            });
+
+            modal1Btn.onclick = () => {
+                modal1.open();
+            };
         </script>
     </body>
 </html>
